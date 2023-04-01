@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const UAParser = require("ua-parser-js");
 const axios = require("axios");
+const requestIp = require("request-ip");
 
 // Membuat middleware untuk mengambil informasi user agent dari setiap permintaan
 app.use((req, res, next) => {
@@ -12,11 +13,14 @@ app.use((req, res, next) => {
   next();
 });
 
+app.use(requestIp.mw());
+
 // Contoh route untuk menampilkan informasi user agent dalam format JSON
-app.get("/", async (req, res) => {
+app.get("/", (req, res) => {
   const userAgent = req.userAgent;
-  const getIp = await axios.get("https://api.ipify.org?format=json");
-  const ip = await getIp.data.ip;
+  // const getIp = await axios.get("https://api.ipify.org?format=json");
+  // const ip = await getIp.data.ip;
+  const ip = req.clientIp;
 
   res.json({ ...userAgent, ip });
 });
