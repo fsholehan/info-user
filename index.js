@@ -17,12 +17,14 @@ app.use(requestIp.mw());
 
 // Contoh route untuk menampilkan informasi user agent dalam format JSON
 app.get("/", (req, res) => {
-  const userAgent = req.userAgent;
-  // const getIp = await axios.get("https://api.ipify.org?format=json");
-  // const ip = await getIp.data.ip;
-  const ip = req.clientIp;
+  try {
+    const userAgent = req.userAgent;
+    const ip = req.clientIp;
 
-  res.json({ ...userAgent, ip });
+    res.status(200).json({ status: "success", data: { ...userAgent, ip } });
+  } catch (err) {
+    res.status(500).json({ status: "error", message: err.message, data: null });
+  }
 });
 
 app.listen(3000, () => {
