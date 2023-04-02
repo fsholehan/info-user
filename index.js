@@ -16,22 +16,12 @@ app.use((req, res, next) => {
 app.use(requestIp.mw());
 
 // Contoh route untuk menampilkan informasi user agent dalam format JSON
-app.get("/", async (req, res) => {
+app.get("/", (req, res) => {
   try {
     const userAgent = req.userAgent;
     const ip = req.clientIp;
 
-    const locationResponse = await axios.get(`https://ipapi.com/json/${ip}`);
-    const { latitude, longitude } = locationResponse.data;
-
-    res.status(200).json({
-      status: "success",
-      data: {
-        ...userAgent,
-        ip,
-        location: { latitude, longitude },
-      },
-    });
+    res.status(200).json({ status: "success", data: { ...userAgent, ip } });
   } catch (err) {
     res.status(500).json({ status: "error", message: err.message, data: null });
   }
