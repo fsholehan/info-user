@@ -21,7 +21,29 @@ app.get("/", (req, res) => {
     const userAgent = req.userAgent;
     const ip = req.clientIp;
 
-    res.status(200).json({ status: "success", data: { ...userAgent, ip } });
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition((position) => {
+        const lat = position.coords.latitude;
+        const lng = position.coords.longitude;
+        res
+          .status(200)
+          .json({
+            status: "success",
+            data: {
+              ...userAgent,
+              ip,
+              location: { latitude: lat, longitude: lng },
+            },
+          });
+      });
+    } else {
+      res
+        .status(200)
+        .json({
+          status: "success",
+          data: { ...userAgent, ip, location: null },
+        });
+    }
   } catch (err) {
     res.status(500).json({ status: "error", message: err.message, data: null });
   }
