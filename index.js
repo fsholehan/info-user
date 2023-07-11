@@ -1,7 +1,6 @@
 const express = require("express");
 const app = express();
 const UAParser = require("ua-parser-js");
-const axios = require("axios");
 const requestIp = require("request-ip");
 
 // Membuat middleware untuk mengambil informasi user agent dari setiap permintaan
